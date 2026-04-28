@@ -59,6 +59,9 @@ SAVE_IMPORT_BIND=127.0.0.1 \
 docker compose up -d
 ```
 
+SteamCMD update/validate runs before every server launch by default. Set
+`AUTO_UPDATE_ON_BOOT=0` if you need startup to skip network update checks.
+
 Published-image overrides:
 
 ```bash
@@ -134,6 +137,7 @@ The chart also supports:
 - `imagePullSecrets`
 - disabling the sidecar API with `--set statsApi.enabled=false`
 - enabling the save-import UI service with `--set service.saveImport.enabled=true`
+- disabling startup SteamCMD update/validate with `--set serverUpdate.autoUpdateOnBoot=false`
 - toggling direct node UDP bindings with `--set service.useHostPorts=true`
 
 Helm now supports two server-config ownership modes:
@@ -214,7 +218,7 @@ Common env overrides:
 | `SAVE_IMPORT_PORT` | `8080` | Save-import HTTP port |
 | `EXTERNAL_CONFIG` | `0` | Use your own JSON config without env patching |
 | `ENSHROUDED_CONFIG_MODE` | auto | `env`, `managed`, or `mutable` |
-| `AUTO_UPDATE_ON_BOOT` | `0` | Run Steam update/validate during startup |
+| `AUTO_UPDATE_ON_BOOT` | `1` | Run Steam update/validate during startup |
 
 When `EXTERNAL_CONFIG=1` or `ENSHROUDED_CONFIG_MODE=mutable`, you must provide your own `enshrouded_server.json` at `ENSHROUDED_CONFIG`.
 When `ENSHROUDED_CONFIG_MODE=managed`, set `ENSHROUDED_MANAGED_CONFIG_TEMPLATE` to a full JSON template and optionally `ENSHROUDED_MANAGED_CONFIG_PASSWORDS` to a secret-backed JSON map like `{"Default":"replace-me"}`.

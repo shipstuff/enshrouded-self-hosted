@@ -47,6 +47,7 @@ Set overrides before running the installer:
 export ENSHROUDED_BASE_DIR=/srv/enshrouded
 export SAVE_IMPORT_MODE=1
 export SAVE_IMPORT_BIND=0.0.0.0
+export AUTO_UPDATE_ON_BOOT=0
 ./bare-linux/install.sh
 ```
 
@@ -68,6 +69,7 @@ export SAVE_IMPORT_BIND=0.0.0.0
 | `SAVE_IMPORT_PORT` | `8080` | save-import HTTP port |
 | `SAVE_IMPORT_BIND` | `127.0.0.1` | save-import bind address |
 | `SAVE_IMPORT_TIMEOUT_SECONDS` | `0` | save-import timeout |
+| `AUTO_UPDATE_ON_BOOT` | `1` | run Steam update/validate during startup |
 
 System-wide install:
 

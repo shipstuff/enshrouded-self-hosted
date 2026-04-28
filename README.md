@@ -129,8 +129,8 @@ helm upgrade --install enshrouded ./helm/enshrouded \
   --namespace games --create-namespace \
   --set image.repository=ghcr.io/your-org/enshrouded-server \
   --set statsApi.image.repository=ghcr.io/your-org/enshrouded-live-stats-api \
-  --set image.tag=v1.0.0 \
-  --set statsApi.image.tag=v1.0.0
+  --set image.tag=0.1.0 \
+  --set statsApi.image.tag=0.1.0
 ```
 
 The chart also supports:
@@ -404,6 +404,21 @@ Optional Helm render check:
 ```bash
 helm template enshrouded ./helm/enshrouded >/dev/null
 ```
+
+## Release Versioned Images And Chart
+
+Releases are source tags in this repo. A tag like `v0.1.0` publishes:
+- `ghcr.io/shipstuff/enshrouded-server:0.1.0`
+- `ghcr.io/shipstuff/enshrouded-live-stats-api:0.1.0`
+- `oci://ghcr.io/shipstuff/charts/enshrouded --version 0.1.0`
+
+Prepare and tag a release:
+
+```bash
+scripts/release.sh 0.1.0 --push
+```
+
+After the image and chart workflows pass, production deployments should pin both the chart version and image tags to `0.1.0`.
 
 Optional Kustomize render check:
 

@@ -36,6 +36,8 @@ spec:
               value: "Enshrouded Server"
             - name: SAVE_IMPORT_TIMEOUT_SECONDS
               value: "0"
+            - name: AUTO_UPDATE_ON_BOOT
+              value: "1"
           ports:
             - containerPort: 15637
               hostPort: 15637

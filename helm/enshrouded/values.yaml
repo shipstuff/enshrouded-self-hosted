@@ -78,6 +78,9 @@ saveImport:
   bind: "127.0.0.1"
   timeoutSeconds: "0"
 
+serverUpdate:
+  autoUpdateOnBoot: true
+
 serverConfig:
   # managed: render the checked-in config template on every start and merge passwords from a Secret
   # mutable: require an existing config file on the PVC and leave it untouched

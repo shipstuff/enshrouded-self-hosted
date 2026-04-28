@@ -50,6 +50,8 @@ spec:
               value: {{ .Values.saveImport.bind | quote }}
             - name: SAVE_IMPORT_TIMEOUT_SECONDS
               value: {{ .Values.saveImport.timeoutSeconds | quote }}
+            - name: AUTO_UPDATE_ON_BOOT
+              value: {{ ternary "1" "0" .Values.serverUpdate.autoUpdateOnBoot | quote }}
             {{- if eq .Values.serverConfig.mode "managed" }}
             - name: ENSHROUDED_MANAGED_CONFIG_TEMPLATE
               value: "/etc/enshrouded/managed/enshrouded_server.json"

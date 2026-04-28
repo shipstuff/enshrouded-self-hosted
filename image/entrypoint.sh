@@ -16,7 +16,26 @@ timestamp() {
 : "${STEAM_SDK32_PATH:=${HOME}/.steam/sdk32}"
 : "${STEAM_COMPAT_CLIENT_INSTALL_PATH:=${STEAMCMD_PATH}}"
 : "${STEAM_COMPAT_DATA_PATH:=${STEAMCMD_PATH}/steamapps/compatdata/${STEAM_APP_ID}}"
-: "${AUTO_UPDATE_ON_BOOT:=0}"
+: "${AUTO_UPDATE_ON_BOOT:=1}"
+
+normalize_bool() {
+  local name="$1"
+  local value="$2"
+  case "${value}" in
+    1|true|TRUE|True|yes|YES|Yes|on|ON|On)
+      printf '1'
+      ;;
+    0|false|FALSE|False|no|NO|No|off|OFF|Off)
+      printf '0'
+      ;;
+    *)
+      echo "$(timestamp) ERROR: ${name} must be 1/0, true/false, yes/no, or on/off; got '${value}'" >&2
+      exit 1
+      ;;
+  esac
+}
+
+RUN_STEAM_UPDATE="$(normalize_bool AUTO_UPDATE_ON_BOOT "${AUTO_UPDATE_ON_BOOT}")"
 
 # Set when we request graceful shutdown so the port-check loop exits cleanly (exit 0).
 GRACEFUL_SHUTDOWN=0
@@ -267,7 +286,6 @@ mkdir -p "$STEAM_COMPAT_DATA_PATH" "$STEAM_COMPAT_DATA_PATH/pfx"
 SAVE_IMPORT_ACTION=""
 run_save_import_ui
 
-RUN_STEAM_UPDATE="$AUTO_UPDATE_ON_BOOT"
 if [ "$SAVE_IMPORT_ACTION" = "update" ]; then
   RUN_STEAM_UPDATE=1
 fi
@@ -281,7 +299,7 @@ if [ "$RUN_STEAM_UPDATE" = "1" ]; then
     +app_update "$STEAM_APP_ID" validate \
     +quit
 else
-  echo "$(timestamp) INFO: Skipping Steam update check (AUTO_UPDATE_ON_BOOT=0 and no UI update request)"
+  echo "$(timestamp) INFO: Skipping Steam update check (RUN_STEAM_UPDATE=0)"
 fi
 
 # Config lives in data path (ENSHROUDED_PATH) so it persists across reboots.
@@ -309,7 +327,7 @@ fi
 echo "$(timestamp) INFO: Startup config $(jq -c \
   --arg configMode "$CONFIG_MODE" \
   --arg externalConfig "$EXTERNAL_CONFIG" \
-  --arg autoUpdateOnBoot "$AUTO_UPDATE_ON_BOOT" \
+  --arg runSteamUpdate "$RUN_STEAM_UPDATE" \
   --arg saveImportMode "$SAVE_IMPORT_MODE" \
   --arg saveImportBind "$SAVE_IMPORT_BIND" \
   --arg saveImportPort "$SAVE_IMPORT_PORT" \
@@ -320,7 +338,7 @@ echo "$(timestamp) INFO: Startup config $(jq -c \
     runtime: {
       configMode: $configMode,
       externalConfig: ($externalConfig == "1"),
-      autoUpdateOnBoot: ($autoUpdateOnBoot == "1"),
+      runSteamUpdate: ($runSteamUpdate == "1"),
       saveImportMode: ($saveImportMode == "1"),
       saveImportBind: $saveImportBind,
       saveImportPort: ($saveImportPort | tonumber),
